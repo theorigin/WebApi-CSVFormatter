@@ -43,11 +43,12 @@ namespace CsvResponse.Test
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?fields=*");
             var value = GetData().Take(1);
+            var expectedDate = new DateTime(2015, 09, 28); // Allows for culture differences on servers
 
             // Act
             var result = Test(request, value);
 
-            Assert.That(result, Is.EqualTo("\"Id\",\"Name\",\"Price\",\"StockQuantity\",\"LastOrderDate\"\r\n1,Product 1,1.23,123,28/09/2015 00:00:00\r\n"));
+            Assert.That(result, Is.EqualTo("\"Id\",\"Name\",\"Price\",\"StockQuantity\",\"LastOrderDate\"\r\n1,Product 1,1.23,123," + expectedDate + "\r\n"));
         }
 
         private static string Test<T>(HttpRequestMessage request, T value, bool ignoreCase = false)
