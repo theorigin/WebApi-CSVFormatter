@@ -47,7 +47,7 @@ namespace CsvResponse.Test
             // Act
             var result = Test(request, value);
 
-            Assert.That(result, Is.EqualTo("\"Id\",\"Name\",\"Price\",\"StockQuantity\",\"LastOrderDate\"\r\n1,Product 1,1.23,123,27/09/2015 00:00:00\r\n"));
+            Assert.That(result, Is.EqualTo("\"Id\",\"Name\",\"Price\",\"StockQuantity\",\"LastOrderDate\"\r\n1,Product 1,1.23,123,28/09/2015 00:00:00\r\n"));
         }
 
         private static string Test<T>(HttpRequestMessage request, T value, bool ignoreCase = false)
@@ -72,7 +72,7 @@ namespace CsvResponse.Test
             {
                 Id = 1,
                 Name = "Product 1"              ,
-                LastOrderDate = DateTime.UtcNow.Date,
+                LastOrderDate = new DateTime(2015, 09, 28),
                 Price = (decimal)1.23,
                 StockQuantity = 123
             };
@@ -81,7 +81,7 @@ namespace CsvResponse.Test
             {
                 Id = 2,
                 Name = "Product,2 - \"It's great\"",
-                LastOrderDate = DateTime.UtcNow.Date,
+                LastOrderDate = new DateTime(2015, 09, 28),
                 Price = (decimal)1.23,
                 StockQuantity = 123
             };
