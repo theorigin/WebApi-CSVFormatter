@@ -6,10 +6,10 @@
     <title>CSV Response</title>
     <authors>Andy Robinson</authors>
     <owners>Andy Robinson</owners>
-    <licenseUrl>https://github.com/terrariumapp/terrarium-sdk/blob/master/LICENSE.md</licenseUrl>
+    <licenseUrl>https://github.com/theorigin/WebApi-CSVFormatter/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/theorigin/WebApi-CSVFormatter</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Provides a CSV reponse for ASP.NET Web API.</description>
+    <description>Provides a CSV formatted response for ASP.NET Web API.</description>
     <releaseNotes></releaseNotes>
     <copyright></copyright>
     <tags>AspNet WebApi AspNetWebApi Web Api CSV Response</tags>
