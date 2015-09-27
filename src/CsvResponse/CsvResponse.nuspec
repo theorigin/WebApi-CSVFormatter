@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>WebApi.CsvResponse</id>
+    <version>$version$</version>
+    <title>CSV Response</title>
+    <authors>Andy Robinson</authors>
+    <owners>Andy Robinson</owners>
+    <licenseUrl>https://github.com/terrariumapp/terrarium-sdk/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/theorigin/WebApi-CSVFormatter</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides a CSV reponse for ASP.NET Web API.</description>
+    <releaseNotes></releaseNotes>
+    <copyright></copyright>
+    <tags>AspNet WebApi AspNetWebApi Web Api CSV Response</tags>
+  </metadata>
+  <files>
+	<file src="bin\$configuration$\VS.CsvResponse.dll" target="lib\net40\" />
+  </files>
+</package>
