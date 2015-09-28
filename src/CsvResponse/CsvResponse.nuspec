@@ -13,11 +13,11 @@
     <releaseNotes></releaseNotes>
     <copyright></copyright>
     <tags>AspNet WebApi AspNetWebApi Web Api CSV Response</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
+    </dependencies>
   </metadata>
   <files>
 	<file src="bin\$configuration$\VS.CsvResponse.dll" target="lib\net40\" />
   </files>
-  <dependencies>
-    <dependency id="Newtonsoft.Json" version="7.0.1" />
-  </dependencies>
 </package>
