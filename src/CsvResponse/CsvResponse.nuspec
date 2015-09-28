@@ -17,4 +17,7 @@
   <files>
 	<file src="bin\$configuration$\VS.CsvResponse.dll" target="lib\net40\" />
   </files>
+  <dependencies>
+    <dependency id="Newtonsoft.Json" version="7.0.1" />
+  </dependencies>
 </package>
