@@ -30,3 +30,45 @@ The following rules explain the supported syntax for the ```fields``` parameter 
 
 * Use a comma-separated list (```fields=a,b```) to select multiple fields.
 * Use an asterisk (```fields=*```) as a wildcard to identify all fields.
+
+##Examples
+
+Given an object like this
+
+```csharp
+class Product {
+  public int Id {get; set;}
+  public string Name {get; set;}
+  public string Barcode {get; set;}
+  public decimal Cost {get; set;}
+}
+````
+
+Will give the following output...
+
+https://myapi.mycompany.com/products
+
+```
+"Id", "Name", "Barcode", "Cost"
+1,Banana,08765412,0.45
+2,Apple,256895,0.75
+3,Orange,895698,0.60
+```
+
+https://myapi.mycompany.com/products?fields=id,name
+
+```
+"Id", "Name"
+1,Banana
+2,Apple
+3,Orange
+```
+
+https://myapi.mycompany.com/products?fields=id,name,cost
+
+```
+"Id", "Name", "Cost"
+1,Banana,0.45
+2,Apple,0.75
+3,Orange,0.60
+```
