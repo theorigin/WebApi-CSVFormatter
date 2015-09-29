@@ -10,9 +10,16 @@ Register the ```CsvFormatter``` in ```Register``` (in WebApiConfig.cs):
 config.Formatters.Add(new CsvFormatter());
 ```
 
+or to specify a ```Func```
+
+```
+config.Formatters.Add(new CsvFormatter { Selector = func  } );
+```
+
 Now if an ```Accept``` header with a value of ```text/csv``` is supplied the response will be automatically formatted as CSV before being returned
 
-*I've only used this with simple objects (not nested) so be warned!*
+##Complex object support
+CsvReponse accepts a ```Func``` to control which object is used as the source when a complex object is used, see examples below.
 
 ##Delimiters
 
@@ -71,4 +78,33 @@ https://myapi.mycompany.com/products?fields=id,name,cost
 1,Banana,0.45
 2,Apple,0.75
 3,Orange,0.60
+```
+
+Given an object like this
+
+```csharp
+class Customer {
+  public int Id {get; set;}
+  public string Name {get; set;}
+  public List<Address> Addresses {get; set;}
+}
+
+class Address {
+  public string Street {get; set;}
+  public string Town {get; set;}
+  public string County {get; set;}
+  public string Postcode {get; set;}
+}
+````
+and a ```Func``` like this
+
+```csharp
+Func<object, HttpRequestMessage, object> func = (o, h) => ((Customer)o).Addresses;
+````
+
+https://myapi.mycompany.com/customers
+
+```
+"Street", "Town", "County", "Postcode"
+Davigdor Road,Hove,East Sussex,BN31RE
 ```
