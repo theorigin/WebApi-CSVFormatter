@@ -12,6 +12,15 @@ config.Formatters.Add(new CsvFormatter());
 
 Now if an ```Accept``` header with a value of ```text/csv``` is supplied the response will be automatically formatted as CSV before being returned
 
+*I've only used this with simple objects (not nested) so be warned!*
+
+##Delimiters
+
+By default a comma (,) will be used as a delimiter. I plan to add support for any delimiter in the next release
+
+##Reserved characters (commas, double quotes, newlines)
+
+If these characters are encountered they will be wrapped within double quotes ("")
 
 ##```fields``` parameter
 
