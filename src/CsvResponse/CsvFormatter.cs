@@ -12,7 +12,11 @@ namespace VS.CsvResponse
 {
     public class CsvFormatter : BufferedMediaTypeFormatter
     {
+        public Func<object, HttpRequestMessage, object> Selector;
+        
         static readonly char[] SpecialChars = { ',', '\n', '\r', '"' };
+
+        private readonly HttpRequestMessage _request;
 
         private readonly string _fields;
 
@@ -20,9 +24,8 @@ namespace VS.CsvResponse
         {
             if (request == null) return;
 
-            var queryOption = HttpUtility.ParseQueryString(request.RequestUri.Query)["fields"];
-
-            _fields = queryOption ?? "*";
+            _request = request;
+            _fields = HttpUtility.ParseQueryString(_request.RequestUri.Query)["fields"] ?? "*";
         }
 
         public CsvFormatter()
@@ -32,7 +35,10 @@ namespace VS.CsvResponse
 
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
-            return new CsvFormatter(request);
+            return new CsvFormatter(request)
+            {
+                Selector = Selector
+            };
         }
 
         public override bool CanWriteType(Type type)
@@ -54,7 +60,7 @@ namespace VS.CsvResponse
         {
             using (var writer = new StreamWriter(writeStream))
             {
-                var dt = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(value), (typeof(DataTable)));
+                var dt = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ApplyFunc(value, _request)), (typeof(DataTable)));
 
                 var cols = dt.Columns.Cast<DataColumn>().Where(column => _fields.IndexOf(column.ColumnName, StringComparison.OrdinalIgnoreCase) >= 0 || _fields == "*").Select(x => x.ColumnName).ToList();
 
@@ -64,18 +70,20 @@ namespace VS.CsvResponse
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    var fields = cols.Select(column => Escape(row[column].ToString())).ToList();
+                    var fields = cols.Select(column => Escape(row[column])).ToList();
 
                     writer.WriteLine(string.Join(",", fields));
                 }
             }
         }
-        
-        private static string Escape(object o)
+
+        private object ApplyFunc(object value, HttpRequestMessage request)
         {
-            if (o == null)
-                return "";
-            
+            return Selector != null ? Selector(value, request) : value;
+        }
+
+        private static string Escape(object o)
+        {            
             var field = o.ToString();
             return field.IndexOfAny(SpecialChars) != -1 ? $"\"{field.Replace("\"", "\"\"")}\"" : field;
         }
