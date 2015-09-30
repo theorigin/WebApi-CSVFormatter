@@ -23,7 +23,7 @@ CsvReponse accepts a ```Func``` to control which object is used as the source wh
 
 ##Delimiters
 
-By default a comma (,) will be used as a delimiter. I plan to add support for any delimiter in the next release
+Well it's a comma (,) as in **Comma** Separated Values :-)
 
 ##Reserved characters (commas, double quotes, newlines)
 
