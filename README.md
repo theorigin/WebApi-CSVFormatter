@@ -31,12 +31,14 @@ If these characters are encountered they will be wrapped within double quotes ("
 
 ##```fields``` parameter
 
-The ```fields``` parameter allows only specific fields to be returned in the response.
+The ```fields``` parameter controler which fields are returned in the response.
 
 The following rules explain the supported syntax for the ```fields``` parameter value:
 
-* Use a comma-separated list (```fields=a,b```) to select multiple fields.
-* Use an asterisk (```fields=*```) as a wildcard to identify all fields.
+* ```fields=id,name``` to select multiple fields
+* ```fields=*``` to select all fields
+
+If ```fields=*``` is omitted all fields are returned
 
 ##Examples
 
