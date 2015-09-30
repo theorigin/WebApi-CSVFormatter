@@ -13,7 +13,9 @@ namespace VS.CsvResponse
     public class CsvFormatter : BufferedMediaTypeFormatter
     {
         public Func<object, HttpRequestMessage, object> Selector;
-        
+
+        public string Filename = "export.csv";
+         
         static readonly char[] SpecialChars = { ',', '\n', '\r', '"' };
 
         private readonly HttpRequestMessage _request;
@@ -31,13 +33,15 @@ namespace VS.CsvResponse
         public CsvFormatter()
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
+            this.AddQueryStringMapping("accept", "text/csv", "text/csv");
         }
 
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
         {
             return new CsvFormatter(request)
             {
-                Selector = Selector
+                Selector = Selector,
+                Filename = Filename
             };
         }
 
@@ -75,6 +79,12 @@ namespace VS.CsvResponse
                     writer.WriteLine(string.Join(",", fields));
                 }
             }
+        }
+
+        public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+        {
+            base.SetDefaultContentHeaders(type, headers, mediaType);
+            headers.Add("Content-Disposition", "attachment; filename=" + Filename);
         }
 
         private object ApplyFunc(object value, HttpRequestMessage request)
