@@ -48,12 +48,7 @@ namespace CsvResponse.Test
                 Totals = new Totals { Total1 = 1, Total2 = 2 }
             };
 
-            Func<object, HttpRequestMessage, object> func = (o, h) =>
-            {
-                var t = (Holder)o;
-
-                return t.Lines;
-            };
+            Func<object, HttpRequestMessage, object> func = (o, h) => ((Holder) o).Lines;
 
             // Act
             var result = Test(request, value, func);
