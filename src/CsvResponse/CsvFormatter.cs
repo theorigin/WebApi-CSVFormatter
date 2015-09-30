@@ -33,7 +33,7 @@ namespace VS.CsvResponse
         public CsvFormatter()
         {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
-            this.AddQueryStringMapping("accept", "text/csv", "text/csv");
+            this.AddQueryStringMapping("accept", "text-csv", "text/csv");
         }
 
         public override MediaTypeFormatter GetPerRequestFormatterInstance(Type type, HttpRequestMessage request, MediaTypeHeaderValue mediaType)
