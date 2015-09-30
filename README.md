@@ -38,7 +38,7 @@ The following rules explain the supported syntax for the ```fields``` parameter 
 * ```fields=id,name``` to select multiple fields
 * ```fields=*``` to select all fields
 
-If ```fields=*``` is omitted all fields are returned
+If ```fields``` is omitted all fields are returned
 
 ##Examples
 
