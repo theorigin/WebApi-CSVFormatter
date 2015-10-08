@@ -30,11 +30,12 @@ namespace CsvResponse.Test
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost");
             var value = GetClaimData().Take(1);
+            var expectedDate = new DateTime(2015, 10, 02); // Allows for culture differences on servers
 
             // Act
             var result = Test(request, value);
 
-            Assert.That(result, Is.EqualTo("\"Date of claim\",\"Amount\",\"IsAuthorised\",\"Notes\"\r\n02/10/2015 00:00:00,123.45,False,These are the notes\r\n"));
+            Assert.That(result, Is.EqualTo("\"Date of claim\",\"Amount\",\"IsAuthorised\",\"Notes\"\r\n" + expectedDate + ",123.45,False,These are the notes\r\n"));
         }
 
         [Test]
