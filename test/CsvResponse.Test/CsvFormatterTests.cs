@@ -16,20 +16,33 @@ namespace CsvResponse.Test
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?fields=Id,Name(");
-            var value = GetData().Take(1);
+            var value = GetProductData().Take(1);
 
             // Act
             var result = Test(request, value);
 
             Assert.That(result, Is.EqualTo("\"Id\",\"Name\"\r\n1,Product 1\r\n"));
         }
-        
+
+        [Test]
+        public void ColumnsNamesAreCorrect()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost");
+            var value = GetClaimData().Take(1);
+
+            // Act
+            var result = Test(request, value);
+
+            Assert.That(result, Is.EqualTo("\"Date of claim\",\"Amount\",\"IsAuthorised\",\"Notes\"\r\n02/10/2015 00:00:00,123.45,False,These are the notes\r\n"));
+        }
+
         [Test]
         public void SpecialCharsAreEscaped()
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?fields=Id,Name(");
-            var value = GetData().Skip(1).Take(1);
+            var value = GetProductData().Skip(1).Take(1);
 
             // Act
             var result = Test(request, value);
@@ -61,7 +74,7 @@ namespace CsvResponse.Test
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost?fields=*");
-            var value = GetData().Take(1);
+            var value = GetProductData().Take(1);
             var expectedDate = new DateTime(2015, 09, 28); // Allows for culture differences on servers
 
             // Act
@@ -92,8 +105,6 @@ namespace CsvResponse.Test
 
         private static string Test<T>(HttpRequestMessage request, T value, Func<object, HttpRequestMessage, object> func = null)
         {
-            //var func = Func<object, object> func = (a) => { return null; };
-            
             var formatter = new CsvFormatter { Selector = func }.GetPerRequestFormatterInstance(null, request, null);
    
             using (var memoryStream = new MemoryStream())
@@ -108,7 +119,7 @@ namespace CsvResponse.Test
             }
         }
         
-        private static IEnumerable<Product> GetData()
+        private static IEnumerable<Product> GetProductData()
         {
             yield return new Product
             {
@@ -137,6 +148,19 @@ namespace CsvResponse.Test
                 StockQuantity = 123
             };
         }
+
+        private static IEnumerable<Claim> GetClaimData()
+        {
+            yield return new Claim
+            {
+               ClaimDate = new DateTime(2015, 10, 02).Date,
+               IsAuthorised = false,
+               Amount = (decimal)123.45,
+               Notes = "These are the notes"
+            };
+
+            
+        }
     }
 
     public class Product
@@ -146,6 +170,18 @@ namespace CsvResponse.Test
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
         public DateTime LastOrderDate { get; set; }
+    }
+
+    public class Claim
+    {
+        [CsvColumn(Name = "Date of claim")]
+        public DateTime ClaimDate { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public bool IsAuthorised { get; set; }
+
+        public string Notes { get; set; }
     }
 
     public class Holder

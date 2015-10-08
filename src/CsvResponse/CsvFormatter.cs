@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace VS.CsvResponse
 {
@@ -48,9 +51,7 @@ namespace VS.CsvResponse
         public override bool CanWriteType(Type type)
         {
             if (type == null)
-            {
                 throw new ArgumentNullException(nameof(type));
-            }
 
             return true;
         }
@@ -64,20 +65,16 @@ namespace VS.CsvResponse
         {
             using (var writer = new StreamWriter(writeStream))
             {
-                var dt = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(ApplyFunc(value, _request)), (typeof(DataTable)));
-
-                var cols = dt.Columns.Cast<DataColumn>().Where(column => _fields.IndexOf(column.ColumnName, StringComparison.OrdinalIgnoreCase) >= 0 || _fields == "*").Select(x => x.ColumnName).ToList();
-
-                var columnNames = cols.Select(column => "\"" + column.Replace("\"", "\"\"") + "\"").ToArray();
+                var obj = ApplyFunc(value, _request);
+                var objType = obj.GetType().GetGenericArguments().First();
+                var dt = (DataTable)JsonConvert.DeserializeObject(JsonConvert.SerializeObject(obj), (typeof(DataTable)));                
+                var cols = GetColumnNames(objType);               
+                var columnNames = cols.Select(column => "\"" + column.Value.Replace("\"", "\"\"") + "\"").ToArray();
 
                 writer.WriteLine(string.Join(",", columnNames));
 
-                foreach (DataRow row in dt.Rows)
-                {
-                    var fields = cols.Select(column => Escape(row[column])).ToList();
-
+                foreach (var fields in from DataRow row in dt.Rows select cols.Select(column => Escape(row[column.Key])).ToList())
                     writer.WriteLine(string.Join(",", fields));
-                }
             }
         }
 
@@ -85,6 +82,30 @@ namespace VS.CsvResponse
         {
             base.SetDefaultContentHeaders(type, headers, mediaType);
             headers.Add("Content-Disposition", "attachment; filename=" + Filename);
+        }
+
+        private Dictionary<string, string> GetColumnNames(Type t)
+        {
+            var columnNames = new Dictionary<string, string>();
+            var type = typeof(CsvColumnAttribute);
+
+            foreach (var propertyInfo in t.GetProperties().Where(propertyInfo => propertyInfo != null && _fields.IndexOf(propertyInfo.Name, StringComparison.OrdinalIgnoreCase) >= 0 || _fields == "*"))
+            {
+                if (Attribute.IsDefined(propertyInfo, type))
+                {
+                    var attributeInstance = Attribute.GetCustomAttribute(propertyInfo, type);
+                    if (attributeInstance != null)
+                    {
+                        foreach (var info in type.GetProperties().Where(info => info.CanRead && string.Compare(info.Name, "name", StringComparison.InvariantCultureIgnoreCase) == 0))
+                            columnNames.Add(propertyInfo.Name, info.GetValue(attributeInstance, null).ToString());                        
+                    }
+                    else
+                        columnNames.Add(propertyInfo.Name, propertyInfo.Name);
+                }
+                else
+                    columnNames.Add(propertyInfo.Name, propertyInfo.Name);
+            }
+            return columnNames;
         }
 
         private object ApplyFunc(object value, HttpRequestMessage request)
