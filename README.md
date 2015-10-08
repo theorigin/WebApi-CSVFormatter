@@ -21,6 +21,9 @@ Now if an ```Accept``` header with a value of ```text/csv``` is supplied the res
 ##Complex object support
 CsvReponse accepts a ```Func``` to control which object is used as the source when a complex object is used, see examples below.
 
+##Column Headers
+You can now control the column headers by using the new ```CsvColumn``` attribute, see examples below.
+
 ##Delimiters
 
 Well it's a comma (,) as in **Comma** Separated Values :-)
@@ -31,7 +34,7 @@ If these characters are encountered they will be wrapped within double quotes ("
 
 ##```fields``` parameter
 
-The ```fields``` parameter controler which fields are returned in the response.
+The ```fields``` parameter controls which fields are returned in the response.
 
 The following rules explain the supported syntax for the ```fields``` parameter value:
 
@@ -109,4 +112,32 @@ https://myapi.mycompany.com/customers
 ```
 "Street", "Town", "County", "Postcode"
 Davigdor Road,Hove,East Sussex,BN31RE
+```
+
+If we modify the object to include the ```CsvColumn``` attribute
+
+```csharp
+class Product {
+  [CsvColumn(Name="Product Id")]
+  public int Id {get; set;}
+  
+  [CsvColumn(Name="Product Name")]
+  public string Name {get; set;}
+  
+  public string Barcode {get; set;}
+  
+  [CsvColumn(Name="RRP")]
+  public decimal Cost {get; set;}
+}
+````
+
+Will give the following output...
+
+https://myapi.mycompany.com/products
+
+```
+"Product Id", "Product Name", "Barcode", "RRP"
+1,Banana,08765412,0.45
+2,Apple,256895,0.75
+3,Orange,895698,0.60
 ```
