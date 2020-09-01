@@ -3,7 +3,7 @@
 # WebApi-CSVFormatter
 Adds CSV formatted response support in ASP.NET Web API
 
-##Usage of partial response
+## Usage of partial response
 Register the ```CsvFormatter``` in ```Register``` (in WebApiConfig.cs):
 
 ```
@@ -18,21 +18,21 @@ config.Formatters.Add(new CsvFormatter { Selector = func  } );
 
 Now if an ```Accept``` header with a value of ```text/csv``` is supplied the response will be automatically formatted as CSV before being returned
 
-##Complex object support
+## Complex object support
 CsvReponse accepts a ```Func``` to control which object is used as the source when a complex object is used, see examples below.
 
-##Column Headers
+## Column Headers
 You can now control the column headers by using the new ```CsvColumn``` attribute, see examples below.
 
-##Delimiters
+## Delimiters
 
 Well it's a comma (,) as in **Comma** Separated Values :-)
 
-##Reserved characters (commas, double quotes, newlines)
+## Reserved characters (commas, double quotes, newlines)
 
 If these characters are encountered they will be wrapped within double quotes ("")
 
-##```fields``` parameter
+## ```fields``` parameter
 
 The ```fields``` parameter controls which fields are returned in the response.
 
@@ -43,7 +43,7 @@ The following rules explain the supported syntax for the ```fields``` parameter 
 
 If ```fields``` is omitted all fields are returned
 
-##Examples
+## Examples
 
 Given an object like this
 
