@@ -14,7 +14,7 @@
     <copyright></copyright>
     <tags>AspNet WebApi AspNetWebApi Web Api CSV Response</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="7.0.1" />
+      <dependency id="Newtonsoft.Json" version="13.0.1" />
     </dependencies>
   </metadata>
   <files>
